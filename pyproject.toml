@@ -9,6 +9,7 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "fuzzy-c-means>=0.0.6",
     "ipykernel>=7.4.0",
     "numpy>=2.5.4",
     "pandas>=3.0.6",

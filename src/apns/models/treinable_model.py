@@ -1,0 +1,9 @@
+import numpy as np
+import pandas as pd
+
+
+class ITreinableModel:
+    @classmethod
+    def create(cls, n_clusters: int, random_state: int) -> "ITreinableModel": ...
+    def fit(self, x: pd.DataFrame | np.ndarray): ...
+    def predict(self, x: pd.DataFrame | np.ndarray) -> np.ndarray: ...
