@@ -15,6 +15,12 @@ class KMeansLikeMetrics:
     best_metrics_per_n_clusters: pd.DataFrame
 
 
+@dataclass
+class DBSCANMetrics:
+    metrics_fig: plotly.graph_objs.Figure
+    metrics: pd.DataFrame
+
+
 # TODO require a pandera/typed d
 def plot_kmeans_like_metrics(df_metrics: pd.DataFrame, model_name: str):
     # TODO rename labels
@@ -52,4 +58,33 @@ def plot_kmeans_like_metrics(df_metrics: pd.DataFrame, model_name: str):
         rand_score_fig=rand_score_fig,
         silhouette_fig=silhouette_fig,
         best_metrics_per_n_clusters=best_values,
+    )
+
+
+def plot_dbscan_metrics(
+    df_metrics: pd.DataFrame,
+    model_name: str = "DBSCAN",
+):
+    metrics = df_metrics.melt(
+        id_vars=["model_name", "eps", "minpts", "distance"],
+        value_vars=["silhouette", "rand_score"],
+        var_name="metric",
+        value_name="value",
+    ).dropna(subset=["value"])
+
+    metrics_fig = px.bar(
+        metrics,
+        x="metric",
+        y="value",
+        title=f"{model_name} Metrics",
+        labels={
+            "metric": "Metric",
+            "value": "Value",
+        },
+        text_auto=".3f",
+    )
+
+    return DBSCANMetrics(
+        metrics_fig=metrics_fig,
+        metrics=df_metrics,
     )
