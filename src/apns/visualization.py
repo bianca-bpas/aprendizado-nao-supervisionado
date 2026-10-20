@@ -21,6 +21,23 @@ class DBSCANMetrics:
     metrics: pd.DataFrame
 
 
+def plot_iris_data(
+    x: pd.DataFrame,
+    y: pd.Series,
+    title: str = "Iris Dataset",
+) -> plotly.graph_objs.Figure:
+    iris = x.copy()
+    iris["species"] = y.to_numpy()
+
+    return px.scatter_matrix(
+        iris,
+        dimensions=x.columns,
+        color="species",
+        title=title,
+        labels={column: column.replace("_", " ").title() for column in x.columns},
+    )
+
+
 # TODO require a pandera/typed d
 def plot_kmeans_like_metrics(df_metrics: pd.DataFrame, model_name: str):
     # TODO rename labels
