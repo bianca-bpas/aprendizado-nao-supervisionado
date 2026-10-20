@@ -10,8 +10,8 @@ class DBSCAN(treinable_model.ITreinableModel):
         self._model = model
 
     @classmethod
-    def create(cls, eps: float, minpts: int, distance: str):
-        return DBSCAN(
+    def create(cls, eps: float, minpts: int, distance: str) -> "DBSCAN":
+        return cls(
             sklearn.cluster.DBSCAN(
                 eps=eps,
                 min_samples=minpts,
@@ -19,8 +19,8 @@ class DBSCAN(treinable_model.ITreinableModel):
             )
         )
 
-    def fit(self, x: pd.DataFrame | np.ndarray):
+    def fit(self, x: pd.DataFrame | np.ndarray) -> None:
         self._model.fit(x)
 
-    def predict(self, x: pd.DataFrame | np.ndarray):
+    def predict(self, x: pd.DataFrame | np.ndarray) -> np.ndarray:
         return self._model.labels_
