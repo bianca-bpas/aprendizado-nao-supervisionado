@@ -1,6 +1,7 @@
 import pandas as pd
 
 from apns import metrics
+from apns.models import dbscan
 from apns.models import treinable_model
 
 
@@ -29,3 +30,34 @@ def evaluate_kmeanslike_model(
                 }
             )
     return pd.DataFrame(results)
+
+
+def evaluate_dbscan_model(
+    x,
+    y,
+    eps: float,
+    minpts: int,
+    distance: str = "euclidean",
+):
+    model = dbscan.DBSCAN.create(
+        eps=eps,
+        minpts=minpts,
+        distance=distance,
+    )
+    model.fit(x)
+
+    clusters = model.predict(x)
+    silhouette = metrics.calcular_silhueta(x, clusters)
+
+    return pd.DataFrame(
+        [
+            {
+                "model_name": dbscan.DBSCAN.__name__,
+                "eps": eps,
+                "minpts": minpts,
+                "distance": distance,
+                "silhouette": silhouette,
+                "rand_score": metrics.calcular_ari(y, clusters),
+            }
+        ]
+    )
