@@ -49,7 +49,16 @@ def evaluate_dbscan_model(
     model.fit(x)
     clusters = model.predict(x)
     n_clusters = len(set(clusters) - {-1})
-    n_ruido = np.sum(clusters == -1)
+    pontos_validos = clusters != -1
+    n_ruido = int(np.sum(~pontos_validos))
+    silhouete = (
+        None
+        if n_clusters < 2
+        else metrics.calcular_silhueta(
+            x.loc[pontos_validos],
+            clusters[pontos_validos],
+        )
+    )
 
     return pd.DataFrame(
         [
@@ -60,8 +69,7 @@ def evaluate_dbscan_model(
                 "distance": distance,
                 "n_clusters": n_clusters,
                 "n_ruido": n_ruido,
-                # TODO desconsiderar os pontos de ruído para calcular a silhueta
-                "silhouette": metrics.calcular_silhueta(x, clusters),
+                "silhouette": silhouete,
                 "rand_score": metrics.calcular_ari(y, clusters),
             }
         ]
