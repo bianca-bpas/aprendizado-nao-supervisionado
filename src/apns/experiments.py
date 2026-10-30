@@ -1,25 +1,9 @@
+import numpy as np
 import pandas as pd
 
 from apns import metrics
-from apns.data import padronizar_iris
 from apns.models import dbscan
 from apns.models import treinable_model
-
-
-def _evaluate_fitted_model(
-    model: treinable_model.ITreinableModel,
-    x: pd.DataFrame,
-    y: pd.Series,
-    parameters: dict[str, object],
-) -> dict[str, object]:
-    model.fit(x)
-    clusters = model.predict(x)
-
-    return {
-        **parameters,
-        "silhouette": metrics.calcular_silhueta(x, clusters),
-        "rand_score": metrics.calcular_ari(y, clusters),
-    }
 
 
 def evaluate_kmeanslike_model(
@@ -61,44 +45,26 @@ def evaluate_dbscan_model(
         minpts=minpts,
         distance=distance,
     )
+
+    model.fit(x)
+    clusters = model.predict(x)
+    n_clusters = len(set(clusters) - {-1})
+    n_ruido = np.sum(clusters == -1)
+
     return pd.DataFrame(
         [
-            _evaluate_fitted_model(
-                model,
-                x,
-                y,
-                {
-                    "model_name": dbscan.DBSCAN.__name__,
-                    "eps": eps,
-                    "minpts": minpts,
-                    "distance": distance,
-                },
-            )
+            {
+                "model_name": dbscan.DBSCAN.__name__,
+                "eps": eps,
+                "minpts": minpts,
+                "distance": distance,
+                "n_clusters": n_clusters,
+                "n_ruido": n_ruido,
+                # TODO desconsiderar os pontos de ruído para calcular a silhueta
+                "silhouette": metrics.calcular_silhueta(x, clusters),
+                "rand_score": metrics.calcular_ari(y, clusters),
+            }
         ]
     )
 
 
-def evaluate_dbscan_original_and_standardized(
-    x: pd.DataFrame,
-    y: pd.Series,
-    eps: float,
-    minpts: int,
-    distance: str = "euclidean",
-) -> dict[str, pd.DataFrame]:
-    datasets = {
-        "original": x,
-        "standardized": padronizar_iris(x),
-    }
-    results = {
-        name: evaluate_dbscan_model(
-            x=dataset,
-            y=y,
-            eps=eps,
-            minpts=minpts,
-            distance=distance,
-        )
-        for name, dataset in datasets.items()
-    }
-    results["x_standardized"] = datasets["standardized"]
-
-    return results
