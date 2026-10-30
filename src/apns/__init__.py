@@ -1,5 +1,5 @@
 from apns import data
-from apns.experiments import evaluate_dbscan_model
+from apns.experiments import export_dbscan_results
 
 
 def main() -> None:
@@ -17,20 +17,14 @@ def main() -> None:
 
     eps_values = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0]
     minpts_values = [3, 5, 7, 10, 15]
-
-    for eps in eps_values:
-        for minpts in minpts_values:
-            dbscan_results = evaluate_dbscan_model(
-                x=X,
-                y=y,
-                eps=eps,
-                minpts=minpts,
-                distance="euclidean",
-            )
-
-            print("\nResultado do DBSCAN:")
-            print(dbscan_results.to_string(index=False))
-            
+    export_dbscan_results(
+        x=X,
+        y=y,
+        eps_values=eps_values,
+        minpts_values=minpts_values,
+        distance="euclidean",
+    )
+    print("\nResultados e gráficos do DBSCAN exportados.")
 
 if __name__ == "__main__":
     main()

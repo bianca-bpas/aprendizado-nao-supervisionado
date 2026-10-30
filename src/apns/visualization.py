@@ -17,7 +17,8 @@ class KMeansLikeMetrics:
 
 @dataclass
 class DBSCANMetrics:
-    metrics_fig: plotly.graph_objs.Figure
+    silhouette_fig: plotly.graph_objs.Figure
+    noise_fig: plotly.graph_objs.Figure
     metrics: pd.DataFrame
 
 
@@ -82,26 +83,37 @@ def plot_dbscan_metrics(
     df_metrics: pd.DataFrame,
     model_name: str = "DBSCAN",
 ):
-    metrics = df_metrics.melt(
-        id_vars=["model_name", "eps", "minpts", "distance"],
-        value_vars=["silhouette", "rand_score"],
-        var_name="metric",
-        value_name="value",
-    ).dropna(subset=["value"])
-
-    metrics_fig = px.bar(
-        metrics,
-        x="metric",
-        y="value",
-        title=f"{model_name} Metrics",
+    silhouette_metrics = df_metrics.dropna(subset=["silhouette"])
+    silhouette_fig = px.line(
+        silhouette_metrics,
+        x="eps",
+        y="silhouette",
+        color="minpts",
+        markers=True,
+        title=f"{model_name} Silhouette por eps",
         labels={
-            "metric": "Metric",
-            "value": "Value",
+            "eps": "eps",
+            "silhouette": "Silhouette",
+            "minpts": "min_samples",
         },
-        text_auto=".3f",
+    )
+
+    noise_fig = px.line(
+        df_metrics,
+        x="eps",
+        y="n_ruido",
+        color="minpts",
+        markers=True,
+        title=f"{model_name} Pontos de ruído por eps",
+        labels={
+            "eps": "eps",
+            "n_ruido": "Pontos de ruído",
+            "minpts": "min_samples",
+        },
     )
 
     return DBSCANMetrics(
-        metrics_fig=metrics_fig,
+        silhouette_fig=silhouette_fig,
+        noise_fig=noise_fig,
         metrics=df_metrics,
     )
