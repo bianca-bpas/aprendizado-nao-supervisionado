@@ -16,6 +16,8 @@ dependencies = [
     "pandas>=3.0.6",
     "plotly[express]>=7.1.0",
     "scikit-learn>=1.9.1",
+    "scikit-learn-extra>=0.3.0",
+    "setuptools>=70.0.0",
 ]
 
 [project.scripts]

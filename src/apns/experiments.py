@@ -5,6 +5,7 @@ import pandas as pd
 
 from apns import metrics
 from apns.models import dbscan
+from apns.models import kmedoids
 from apns.models import treinable_model
 from apns.visualization import plot_dbscan_metrics
 
@@ -30,6 +31,37 @@ def evaluate_kmeanslike_model(
                     "iter": iter,
                     "k": k,
                     "silhouette": silhouete,
+                    "rand_score": metrics.calcular_ari(y, clusters),
+                }
+            )
+    return pd.DataFrame(results)
+
+
+def evaluate_kmedoids_model(
+    x: pd.DataFrame,
+    y: pd.Series,
+    metric: str = "cityblock",
+    max_n_cluster: int = 5,
+    max_iter: int = 10,
+) -> pd.DataFrame:
+    results = []
+    for k in range(2, max_n_cluster + 1):
+        for iteration in range(max_iter):
+            model = kmedoids.KMedoids.create(
+                n_clusters=k,
+                metric=metric,
+                random_state=iteration,
+            )
+            model.fit(x)
+
+            clusters = model.predict(x)
+            results.append(
+                {
+                    "model_name": kmedoids.KMedoids.__name__,
+                    "iter": iteration,
+                    "k": k,
+                    "metric": metric,
+                    "silhouette": metrics.calcular_silhueta(x, clusters),
                     "rand_score": metrics.calcular_ari(y, clusters),
                 }
             )
