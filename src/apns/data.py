@@ -1,5 +1,4 @@
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
 
 
 def carregar_iris(path: str = "data/iris.data.csv"):
@@ -17,10 +16,3 @@ def carregar_iris(path: str = "data/iris.data.csv"):
     assert not y.isna().any()
     return X, y
 
-
-def padronizar_iris(x: pd.DataFrame) -> pd.DataFrame:
-    """Padroniza as características da base Iris para média zero e desvio um."""
-    scaler = StandardScaler()
-    x_scaled = scaler.fit_transform(x)
-
-    return pd.DataFrame(x_scaled, columns=x.columns, index=x.index)

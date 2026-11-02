@@ -1,5 +1,5 @@
 from apns import data
-from apns.experiments import export_dbscan_results
+from apns.experiments import evaluate_kmedoids_model, export_dbscan_results
 
 
 def main() -> None:
@@ -25,6 +25,23 @@ def main() -> None:
         distance="euclidean",
     )
     print("\nResultados e gráficos do DBSCAN exportados.")
+
+    ''' {K-Medoids}
+    '''
+    kmedoids_results = evaluate_kmedoids_model(
+        x=X,
+        y=y,
+        metric="cityblock",
+        max_n_cluster=5,
+        max_iter=10,
+    )
+    print("\nResultados do K-Medoids:")
+    print(kmedoids_results.to_string(index=False))
+    melhor_kmedoids = kmedoids_results.loc[
+        kmedoids_results["silhouette"].idxmax()
+    ]
+    print("\nMelhor configuração do K-Medoids por silhueta:")
+    print(melhor_kmedoids.to_string())
 
 if __name__ == "__main__":
     main()
