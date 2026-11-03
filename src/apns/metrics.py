@@ -4,7 +4,7 @@ from sklearn.metrics import (
 )
 
 
-def calcular_silhueta(X, labels):
+def calcular_silhueta(X, labels, metric="euclidean"):
     """Calcula a silhueta quando há pelo menos dois grupos válidos."""
     labels = list(labels)
     grupos = set(labels)
@@ -12,7 +12,7 @@ def calcular_silhueta(X, labels):
     if len(grupos) < 2 or len(grupos) >= len(labels):
         return None
 
-    return silhouette_score(X, labels)
+    return silhouette_score(X, labels, metric=metric)
 
 
 def calcular_ari(y_real, labels):
