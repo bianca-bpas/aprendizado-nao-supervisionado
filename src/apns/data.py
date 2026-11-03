@@ -15,4 +15,3 @@ def carregar_iris(path: str = "data/iris.data.csv"):
     assert not X.isna().any().any()
     assert not y.isna().any()
     return X, y
-

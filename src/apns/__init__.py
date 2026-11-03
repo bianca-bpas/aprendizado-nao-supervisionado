@@ -10,10 +10,10 @@ def main() -> None:
     print("\nDistribuição das espécies:")
     print(y.value_counts().sort_index())
 
-    ''' {DBSCAN}
+    """ {DBSCAN}
     aumentar eps aumenta o raio de vizinhança. em geral, mais pontos passam a ser alcançáveis e regiões podem se unir
     aumentar minpts aumenta a  quantidade mínima de pontos necessária para formar uma região densa. em geral, fica mais difícil formar regiões e alguns pontos podem virar ruído
-    '''
+    """
 
     eps_values = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0]
     minpts_values = [3, 5, 7, 10, 15]
@@ -26,8 +26,8 @@ def main() -> None:
     )
     print("\nResultados e gráficos do DBSCAN exportados.")
 
-    ''' {K-Medoids}
-    '''
+    """ {K-Medoids}
+    """
     kmedoids_results = evaluate_kmedoids_model(
         x=X,
         y=y,
@@ -37,11 +37,10 @@ def main() -> None:
     )
     print("\nResultados do K-Medoids:")
     print(kmedoids_results.to_string(index=False))
-    melhor_kmedoids = kmedoids_results.loc[
-        kmedoids_results["silhouette"].idxmax()
-    ]
+    melhor_kmedoids = kmedoids_results.loc[kmedoids_results["silhouette"].idxmax()]
     print("\nMelhor configuração do K-Medoids por silhueta:")
     print(melhor_kmedoids.to_string())
+
 
 if __name__ == "__main__":
     main()

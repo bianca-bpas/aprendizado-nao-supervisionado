@@ -17,7 +17,7 @@ def carregar_iris():
 
     # Verificar distribuição das espécies
     assert y.nunique() == 3, "Quantidade inesperada de espécies."
-    
+
     return X, y
 
 
@@ -31,4 +31,3 @@ if __name__ == "__main__":
 
     print("\nDistribuição das espécies:")
     print(y.value_counts().sort_index())
-    

@@ -149,5 +149,3 @@ def export_dbscan_results(
     plots.noise_fig.write_image(figures_dir / "dbscan_noise.png")
 
     return all_results
-
-
