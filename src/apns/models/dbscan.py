@@ -1,3 +1,5 @@
+from typing import Self
+
 import numpy as np
 import pandas as pd
 import sklearn.cluster
@@ -19,8 +21,13 @@ class DBSCAN(treinable_model.ITreinableModel):
             )
         )
 
-    def fit(self, x: pd.DataFrame | np.ndarray) -> None:
+    def fit(self, x: pd.DataFrame | np.ndarray) -> Self:
         self._model.fit(x)
+        return self
 
-    def predict(self, x: pd.DataFrame | np.ndarray) -> np.ndarray:
+    def fit_predict(self, x: pd.DataFrame | np.ndarray) -> np.ndarray:
+        return self._model.fit_predict(x)
+
+    @property
+    def labels_(self) -> np.ndarray:
         return self._model.labels_

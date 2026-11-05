@@ -47,7 +47,6 @@ def main() -> None:
         x=X,
         y=y,
         max_n_cluster=5,
-        max_iter=1,
     )
     print("\nResultados e gráfico do agrupamento hierárquico exportados.")
 
