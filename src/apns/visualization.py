@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import plotly
 import plotly.express as px
+from scipy.cluster.hierarchy import dendrogram
 from matplotlib.figure import Figure
 
 px.defaults.height = 480  # pyright: ignore[reportAttributeAccessIssue]
@@ -91,6 +92,19 @@ def plot_cluster_assignments(
     axis.set_ylabel(x.columns[1])
     axis.set_title(title)
     figure.colorbar(scatter, ax=axis, label="Rótulo do cluster")
+    figure.tight_layout()
+    return figure
+
+
+def plot_hierarchical_dendrogram(
+    linkage_matrix,
+    title: str = "Agrupamento hierárquico: dendrograma",
+) -> Figure:
+    figure, axis = plt.subplots(figsize=(12, 6))
+    dendrogram(linkage_matrix, ax=axis)
+    axis.set_xlabel("Observações")
+    axis.set_ylabel("Distância")
+    axis.set_title(title)
     figure.tight_layout()
     return figure
 

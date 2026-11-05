@@ -1,6 +1,7 @@
 from apns import data
 from apns.experiments import (
     export_dbscan_results,
+    export_hierarchical_results,
     export_kmedoids_results,
     test_kmedoids_model,
 )
@@ -41,6 +42,14 @@ def main() -> None:
         max_iter=10,
     )
     print("\nResultados e gráficos do K-Medoids exportados.")
+
+    export_hierarchical_results(
+        x=X,
+        y=y,
+        max_n_cluster=5,
+        max_iter=1,
+    )
+    print("\nResultados e gráfico do agrupamento hierárquico exportados.")
 
 
 if __name__ == "__main__":
