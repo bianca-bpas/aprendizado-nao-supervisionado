@@ -1,0 +1,6 @@
+model_name,iter,k,silhouette,rand_score
+HierarchicalCentroid,0,1,,0.0
+HierarchicalCentroid,0,2,0.6863930543445408,0.5681159420289855
+HierarchicalCentroid,0,3,0.5539343898551252,0.7591987071071522
+HierarchicalCentroid,0,4,0.5539343898551252,0.7591987071071522
+HierarchicalCentroid,0,5,0.4302717054299352,0.7485552130176957

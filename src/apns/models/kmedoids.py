@@ -1,3 +1,5 @@
+from typing import Self
+
 import numpy as np
 import pandas as pd
 from sklearn_extra.cluster import KMedoids as SklearnKMedoids
@@ -25,11 +27,12 @@ class KMedoids(treinable_model.ITreinableModel):
             )
         )
 
-    def fit(self, x: pd.DataFrame | np.ndarray) -> None:
+    def fit(self, x: pd.DataFrame | np.ndarray) -> Self:
         self._model.fit(x)
         self.medoid_indices_ = self._model.medoid_indices_
         self.labels_ = self._model.labels_
         self.inertia_ = self._model.inertia_
+        return self
 
     def predict(self, x: pd.DataFrame | np.ndarray) -> np.ndarray:
         return self._model.predict(x)

@@ -1,3 +1,5 @@
+from typing import Self
+
 import fcmeans
 import numpy as np
 import pandas as pd
@@ -12,16 +14,17 @@ class FuzzyKMeans(treinable_model.ITreinableModel):
         self._model = model
 
     @classmethod
-    def create(cls, n_clusters: int, random_state: int):
-        return FuzzyKMeans(
+    def create(cls, n_clusters: int, random_state: int) -> Self:
+        return cls(
             fcmeans.FCM(
                 n_clusters=n_clusters,
                 random_state=random_state,
             )
         )
 
-    def fit(self, x: pd.DataFrame | np.ndarray):
+    def fit(self, x: pd.DataFrame | np.ndarray) -> Self:
         self._model.fit(x)
+        return self
 
-    def predict(self, x: pd.DataFrame | np.ndarray):
+    def predict(self, x: pd.DataFrame | np.ndarray) -> np.ndarray:
         return self._model.predict(x)

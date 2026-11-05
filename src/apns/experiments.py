@@ -6,11 +6,13 @@ import pandas as pd
 
 from apns import metrics
 from apns.models import dbscan
+from apns.models import hierarchical
 from apns.models import kmedoids
 from apns.models import treinable_model
 from apns.visualization import (
     plot_cluster_assignments,
     plot_dbscan_metrics,
+    plot_hierarchical_dendrogram,
     plot_kmedoids_inertia,
     plot_kmedoids_silhouette,
 )
@@ -19,7 +21,7 @@ from apns.visualization import (
 def evaluate_kmeanslike_model(
     x,
     y,
-    model_cls: type[treinable_model.ITreinableModel],
+    model_cls: type[treinable_model.IPredictiveModel],
     max_n_cluster=5,
     max_iter=10,
 ):
@@ -30,17 +32,71 @@ def evaluate_kmeanslike_model(
             model.fit(x)
 
             clusters = model.predict(x)
-            silhouete = metrics.calcular_silhueta(x, model.predict(x))
+            silhouette = metrics.calcular_silhueta(x, clusters)
             results.append(
                 {
                     "model_name": model_cls.__name__,
                     "iter": iter,
                     "k": k,
-                    "silhouette": silhouete,
+                    "silhouette": silhouette,
                     "rand_score": metrics.calcular_ari(y, clusters),
                 }
             )
     return pd.DataFrame(results)
+
+
+def evaluate_hierarchical_model(
+    x: pd.DataFrame,
+    y: pd.Series,
+    max_n_cluster: int = 5,
+) -> pd.DataFrame:
+    results = []
+    for k in range(1, max_n_cluster + 1):
+        model = hierarchical.HierarchicalCentroid.create(n_clusters=k)
+        clusters = model.fit_predict(x)
+        results.append(
+            {
+                "model_name": model.__class__.__name__,
+                "iter": 0,
+                "k": k,
+                "silhouette": metrics.calcular_silhueta(x, clusters),
+                "rand_score": metrics.calcular_ari(y, clusters),
+            }
+        )
+    return pd.DataFrame(results)
+
+
+def export_hierarchical_results(
+    x: pd.DataFrame,
+    y: pd.Series,
+    max_n_cluster: int = 5,
+    results_dir: Path | None = None,
+) -> pd.DataFrame:
+    results = evaluate_hierarchical_model(
+        x=x,
+        y=y,
+        max_n_cluster=max_n_cluster,
+    )
+
+    if results_dir is None:
+        project_root = Path(__file__).resolve().parents[2]
+        results_dir = project_root / "results"
+
+    tables_dir = results_dir / "tables"
+    figures_dir = results_dir / "figures"
+    tables_dir.mkdir(parents=True, exist_ok=True)
+    figures_dir.mkdir(parents=True, exist_ok=True)
+
+    results.to_csv(tables_dir / "hierarchical_metrics.csv", index=False)
+
+    model = hierarchical.HierarchicalCentroid.create(
+        n_clusters=2,
+    )
+    model.fit(x)
+    dendrogram_fig = plot_hierarchical_dendrogram(model.linkage_matrix_)
+    dendrogram_fig.savefig(figures_dir / "hierarchical_dendrogram.png")
+
+    return results
 
 
 def evaluate_kmedoids_model(
@@ -166,8 +222,7 @@ def evaluate_dbscan_model(
         distance=distance,
     )
 
-    model.fit(x)
-    clusters = model.predict(x)
+    clusters = model.fit_predict(x)
     n_clusters = len(set(clusters) - {-1})
     pontos_validos = clusters != -1
     n_ruido = int(np.sum(~pontos_validos))
