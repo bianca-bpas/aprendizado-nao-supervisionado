@@ -1,0 +1,2 @@
+k,seed,covariance_type,entropy_mean,entropy_max,p_max_min,n_p_max_below_0_6,n_p_max_below_0_9,n_outside_majority
+3,3,full,0.03193806148731821,0.656337073607085,0.6348261452535842,0,3,5

@@ -10,7 +10,7 @@
   Cada algoritmo foi executado com seus parâmetros específicos, e quando aplicável, foram avaliadas diferentes configurações por meio da variação dos parâmetros de interesse e de sementes aleatórias. A avaliação utilizou o Silhouette Score como métrica interna @rousseeuw1987silhouettes e o Adjusted Rand Index (ARI) como métrica externa @hubert1985comparing. O Silhouette Score mede a separação dos grupos em relação à coesão interna, enquanto o ARI mede a concordância entre os agrupamentos e as espécies reais, corrigida pelo acordo esperado ao acaso. O cálculo dessas métricas seguiu as particularidades de cada algoritmo, incluindo o tratamento de observações classificadas como ruído.
 
   == K-Means
-  O K-Means é um método particional baseado em centróides, que são definidos como o ponto médio do agrupamento @macqueen1967kmeans. Assim, a função objetivo da distância euclidiana ao quadrado (SSE, @eq:sse) é minimizada para garantir a similaridade intra-agrupamento e reduzir a inter-agrupamento @han_kamber_pei_2012.
+  O K-Means é um método particional que representa cada grupo por seu centróide, isto é, a média das observações nele atribuídas @macqueen1967kmeans. O algoritmo busca minimizar a soma dos quadrados das distâncias euclidianas entre as observações e os respectivos centróides (SSE, @eq:sse), reduzindo a dispersão dentro dos grupos @han_kamber_pei_2012.
 
   $ "SSE" = sum_(j=1)^k sum_(x_i in C_j) norm(x_i - mu_j)^2 $ <eq:sse>
 
@@ -82,7 +82,7 @@
 
   == Avaliação dos embeddings <sec:avaliacao-embeddings>
 
-  Para comparar os espaços obtidos em cada técnica 2D, a trustworthiness com dez vizinhos foi adotada como métrica principal de seleção @venna2006local, por avaliar diretamente a preservação das relações de vizinhança no embedding. A silhueta interna obtida por um K-Means no plano foi mantida como métrica complementar para desempate e para caracterizar a compactação dos grupos @rousseeuw1987silhouettes. A silhueta externa com as espécies reais foi utilizada apenas como avaliação final. O PCA possui uma única configuração 2D e, portanto, não envolve uma escolha entre hiperparâmetros; no Kernel PCA, t-SNE e UMAP, configuram-se trustworthiness como primeiro critério e silhueta como segundo.
+  Para cada projeção 2D, registramos três medidas. A trustworthiness com dez vizinhos avalia a preservação das vizinhanças locais e é o critério principal para selecionar configurações quando há hiperparâmetros @venna2006local. A silhueta interna é calculada sobre uma partição de K-Means ajustada no próprio plano, testando $k in {2, 3, 4, 5}$; ela caracteriza a coesão e a separação dessa partição, mas não a fidelidade ao espaço original @rousseeuw1987silhouettes. A silhueta com os rótulos reais de espécie é usada somente como avaliação externa. A PCA tem uma única configuração 2D; no Kernel PCA, t-SNE e UMAP, selecionamos primeiro pela trustworthiness e usamos a silhueta interna apenas para desempate.
 
   == PCA
 
@@ -90,7 +90,7 @@
 
   Neste trabalho, a classe `PCA` do Scikit-learn foi usada com as configurações predefinidas @pedregosa2011scikit @scikit_learn_pca.
 
-  Foram registrados os autovalores e as proporções de variância explicada e acumulada, além dos vetores das componentes. A silhueta obtida como avaliação pelo K-Means é registrada para fins de comparação. Para a visualização, foram produzidos o gráfico de dispersão das observações nesse plano, colorido pela espécie real, e o gráfico de variância por componente.
+  Foram registrados os autovalores, as proporções de variância explicada e acumulada e os vetores das componentes. Também foram calculadas a trustworthiness e a silhueta interna de K-Means no plano 2D, como medidas complementares; como a PCA tem uma única configuração, essas métricas não são usadas para selecionar hiperparâmetros. Para a visualização, foram produzidos o gráfico das observações projetadas, coloridas pelas espécies reais, e o gráfico de variância por componente.
 
   == Kernel PCA
 
@@ -99,10 +99,10 @@
 
   Neste trabalho, foi usada a classe KernelPCA do Scikit-learn com kernel RBF @scholkopf_smola_muller_1998 @scikit_learn_kernel_pca, com $gamma in {0.05, 0.1, 0.25, 0.5, 1.0}$#footnote[Pela relação da biblioteca, $gamma = 1/(2 sigma^2)$, os valores 0,25, 0,50 e 1,0 correspondem a $sigma^2 = 2,0$, $1,0$ e $0,5$ do Kernel Fuzzy K-Means, permitindo comparação direta, enquanto 0,05 e 0,10 estendem a busca para kernels mais largos.]. Os demais parâmetros seguiram os predefinidos.
 
-  Para cada $gamma$, foram registrados os autovalores, a proporção de cada um em relação à soma dos autovalores retornados e o acumulado, além das três métricas de @sec:avaliacao-embeddings. A configuração final foi escolhida pela maior trustworthiness, utilizando a silhueta interna como critério de desempate. Como no caso do PCA, foram produzidos o gráfico de dispersão das duas primeiras componentes e o gráfico da variância para os primeiros dez componentes da configuração.
+  Para cada $gamma$, foram registrados os autovalores $eta_i$ da matriz de kernel centrada $K_c$ e suas proporções em relação à soma dos autovalores retornados. No espaço de características, as variâncias correspondentes são $lambda_i = eta_i / n$; por isso, as proporções normalizadas são iguais. Também foram calculados o acumulado e as três métricas de @sec:avaliacao-embeddings. A configuração final foi escolhida pela maior trustworthiness, usando a silhueta interna apenas para desempate. Para essa configuração, foram produzidos o gráfico da projeção, o gráfico das proporções dos dez primeiros autovalores e o scree completo em escala logarítmica.
   == t-SNE
 
-  O t-SNE foi utilizado para representar os quatro atributos numéricos da base Iris em um espaço bidimensional, preservando principalmente relações de vizinhança. Para isso, converte as distâncias no espaço original em em probabilidades de afinidade e busca aproximar as distribuições de probabilidade de vizinhança nos espaços original e reduzido, utilizando uma distribuição t de Student no espaço de baixa dimensão.
+  O t-SNE foi utilizado para representar os quatro atributos numéricos da base Iris em um espaço bidimensional, preservando principalmente relações de vizinhança. Para isso, converte as distâncias no espaço original em probabilidades de afinidade e busca aproximar as distribuições de vizinhança nos espaços original e reduzido, utilizando uma distribuição t de Student no espaço de baixa dimensão.
 
   O algoritmo foi implementado com a classe `TSNE` do Scikit-learn @van_der_maaten2008tsne @pedregosa2011scikit, utilizando inicialização PCA, taxa de aprendizado automática, limite de 1000 iterações e semente aleatória 42. Os quatro atributos padronizados foram utilizados como entrada, sem os rótulos de espécie. Foram avaliadas as perplexidades $5$, $10$, $20$ e $30$. Conforme @sec:avaliacao-embeddings, a configuração foi selecionada pela maior trustworthiness, usando a silhueta interna apenas como critério de desempate. Para cada configuração foram registrados KL, número de iterações e todas as métricas de avaliação. Todas as execuções atingiram o limite de 1000 iterações, registrando $n_"iter" = 999$, portanto não houve confirmação de convergência formal. Como análise adicional de repetibilidade, a perplexidade selecionada, 20, foi executada com dez sementes ($0$ a $9$), preservando a inicialização PCA; nessa análise foram calculadas médias e desvios padrões amostrais. Como o método permaneceu com a inicialização PCA, desvio zero não constitui estabilidade robusta sob inicializações aleatórias ou em novas amostras.
 

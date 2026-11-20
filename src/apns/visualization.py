@@ -142,6 +142,59 @@ def plot_cluster_assignments(
     return figure
 
 
+def plot_em_clusters_comparison(
+    x: pd.DataFrame,
+    clusters_by_k: dict[int, np.ndarray],
+    y: pd.Series,
+    x_column: str = "petal_length",
+    y_column: str = "petal_width",
+) -> Figure:
+    """Lado a lado, as partições EM selecionadas para cada k.
+
+    A legenda informa a espécie majoritária e, entre parênteses, quantas
+    observações de cada espécie o grupo contém. Isso torna visíveis tanto a
+    separação taxonômica quanto os erros (por exemplo, 5 versicolor no grupo
+    majoritariamente virginica em k = 3).
+    """
+    species_names = {
+        "Iris-setosa": "Setosa",
+        "Iris-versicolor": "Versicolor",
+        "Iris-virginica": "Virginica",
+    }
+    ks = sorted(clusters_by_k)
+    figure, axes = plt.subplots(1, len(ks), figsize=(12, 5), squeeze=False)
+
+    for axis, k in zip(axes.flat, ks):
+        labels = np.asarray(clusters_by_k[k])
+        species = pd.Series(y.to_numpy(), name="species")
+        for cluster in np.unique(labels):
+            counts = species[labels == cluster].value_counts()
+            parts = [
+                f"{species_names.get(str(name), str(name))} ({count})"
+                for name, count in counts.items()
+            ]
+            axis.scatter(
+                x.loc[labels == cluster, x_column],
+                x.loc[labels == cluster, y_column],
+                c=[plt.get_cmap("tab10")(int(cluster) % 10)],
+                edgecolors="black",
+                linewidths=0.3,
+                label=" + ".join(parts),
+            )
+        axis.set_xlabel(x_column.replace("_", " ").title())
+        axis.set_ylabel(y_column.replace("_", " ").title())
+        axis.set_title(f"EM (k = {k})")
+        axis.legend(title="Grupo (espécies)", fontsize=8)
+        axis.grid(alpha=0.2)
+
+    figure.suptitle(
+        "Misturas gaussianas com EM: partição selecionada (k = 2) "
+        "e maior ARI externo (k = 3)"
+    )
+    figure.tight_layout()
+    return figure
+
+
 def plot_tsne_embedding(
     embedding: np.ndarray,
     labels: pd.Series,

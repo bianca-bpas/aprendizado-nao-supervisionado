@@ -213,9 +213,8 @@ def export_kernel_pca_results(
     print(
         f"Kernel PCA: melhor gamma={best_gamma:g}, "
         f"trustworthiness={best_row['trustworthiness']:.4f}, "
-        f"silhueta={best_row['silhouette']:.4f}"
-        if best_row["trustworthiness"] is not None
-        else f"Kernel PCA: melhor gamma={best_gamma:g}"
+        f"silhueta interna={best_row['silhouette']:.4f}, "
+        f"silhueta externa={best_row['external_silhouette']:.4f}"
     )
     return result.variance
 

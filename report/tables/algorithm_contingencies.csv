@@ -1,0 +1,127 @@
+algorithm,k,m,species,cluster,count
+K-Means,2,,Setosa,0,0
+K-Means,2,,Setosa,1,50
+K-Means,2,,Versicolor,0,50
+K-Means,2,,Versicolor,1,0
+K-Means,2,,Virginica,0,50
+K-Means,2,,Virginica,1,0
+K-Means,3,,Setosa,0,0
+K-Means,3,,Setosa,1,50
+K-Means,3,,Setosa,2,0
+K-Means,3,,Versicolor,0,39
+K-Means,3,,Versicolor,1,0
+K-Means,3,,Versicolor,2,11
+K-Means,3,,Virginica,0,14
+K-Means,3,,Virginica,1,0
+K-Means,3,,Virginica,2,36
+K-Means,4,,Setosa,0,0
+K-Means,4,,Setosa,1,27
+K-Means,4,,Setosa,2,0
+K-Means,4,,Setosa,3,23
+K-Means,4,,Versicolor,0,39
+K-Means,4,,Versicolor,1,0
+K-Means,4,,Versicolor,2,11
+K-Means,4,,Versicolor,3,0
+K-Means,4,,Virginica,0,14
+K-Means,4,,Virginica,1,0
+K-Means,4,,Virginica,2,36
+K-Means,4,,Virginica,3,0
+K-Means,5,,Setosa,0,27
+K-Means,5,,Setosa,1,0
+K-Means,5,,Setosa,2,23
+K-Means,5,,Setosa,3,0
+K-Means,5,,Setosa,4,0
+K-Means,5,,Versicolor,0,0
+K-Means,5,,Versicolor,1,27
+K-Means,5,,Versicolor,2,0
+K-Means,5,,Versicolor,3,21
+K-Means,5,,Versicolor,4,2
+K-Means,5,,Virginica,0,0
+K-Means,5,,Virginica,1,20
+K-Means,5,,Virginica,2,0
+K-Means,5,,Virginica,3,3
+K-Means,5,,Virginica,4,27
+Fuzzy K-Means,2,1.5,Setosa,0,50
+Fuzzy K-Means,2,1.5,Setosa,1,0
+Fuzzy K-Means,2,1.5,Versicolor,0,0
+Fuzzy K-Means,2,1.5,Versicolor,1,50
+Fuzzy K-Means,2,1.5,Virginica,0,0
+Fuzzy K-Means,2,1.5,Virginica,1,50
+Fuzzy K-Means,3,1.5,Setosa,0,50
+Fuzzy K-Means,3,1.5,Setosa,1,0
+Fuzzy K-Means,3,1.5,Setosa,2,0
+Fuzzy K-Means,3,1.5,Versicolor,0,0
+Fuzzy K-Means,3,1.5,Versicolor,1,11
+Fuzzy K-Means,3,1.5,Versicolor,2,39
+Fuzzy K-Means,3,1.5,Virginica,0,0
+Fuzzy K-Means,3,1.5,Virginica,1,36
+Fuzzy K-Means,3,1.5,Virginica,2,14
+Fuzzy K-Means,4,2.0,Setosa,0,0
+Fuzzy K-Means,4,2.0,Setosa,1,1
+Fuzzy K-Means,4,2.0,Setosa,2,0
+Fuzzy K-Means,4,2.0,Setosa,3,49
+Fuzzy K-Means,4,2.0,Versicolor,0,26
+Fuzzy K-Means,4,2.0,Versicolor,1,22
+Fuzzy K-Means,4,2.0,Versicolor,2,2
+Fuzzy K-Means,4,2.0,Versicolor,3,0
+Fuzzy K-Means,4,2.0,Virginica,0,16
+Fuzzy K-Means,4,2.0,Virginica,1,3
+Fuzzy K-Means,4,2.0,Virginica,2,31
+Fuzzy K-Means,4,2.0,Virginica,3,0
+Fuzzy K-Means,5,1.5,Setosa,0,0
+Fuzzy K-Means,5,1.5,Setosa,1,29
+Fuzzy K-Means,5,1.5,Setosa,2,0
+Fuzzy K-Means,5,1.5,Setosa,3,0
+Fuzzy K-Means,5,1.5,Setosa,4,21
+Fuzzy K-Means,5,1.5,Versicolor,0,2
+Fuzzy K-Means,5,1.5,Versicolor,1,0
+Fuzzy K-Means,5,1.5,Versicolor,2,27
+Fuzzy K-Means,5,1.5,Versicolor,3,21
+Fuzzy K-Means,5,1.5,Versicolor,4,0
+Fuzzy K-Means,5,1.5,Virginica,0,28
+Fuzzy K-Means,5,1.5,Virginica,1,0
+Fuzzy K-Means,5,1.5,Virginica,2,19
+Fuzzy K-Means,5,1.5,Virginica,3,3
+Fuzzy K-Means,5,1.5,Virginica,4,0
+EM,2,,Setosa,0,50
+EM,2,,Setosa,1,0
+EM,2,,Versicolor,0,0
+EM,2,,Versicolor,1,50
+EM,2,,Virginica,0,0
+EM,2,,Virginica,1,50
+EM,3,,Setosa,0,0
+EM,3,,Setosa,1,50
+EM,3,,Setosa,2,0
+EM,3,,Versicolor,0,45
+EM,3,,Versicolor,1,0
+EM,3,,Versicolor,2,5
+EM,3,,Virginica,0,0
+EM,3,,Virginica,1,0
+EM,3,,Virginica,2,50
+EM,4,,Setosa,0,0
+EM,4,,Setosa,1,50
+EM,4,,Setosa,2,0
+EM,4,,Setosa,3,0
+EM,4,,Versicolor,0,3
+EM,4,,Versicolor,1,0
+EM,4,,Versicolor,2,0
+EM,4,,Versicolor,3,47
+EM,4,,Virginica,0,24
+EM,4,,Virginica,1,0
+EM,4,,Virginica,2,26
+EM,4,,Virginica,3,0
+EM,5,,Setosa,0,0
+EM,5,,Setosa,1,50
+EM,5,,Setosa,2,0
+EM,5,,Setosa,3,0
+EM,5,,Setosa,4,0
+EM,5,,Versicolor,0,33
+EM,5,,Versicolor,1,0
+EM,5,,Versicolor,2,16
+EM,5,,Versicolor,3,0
+EM,5,,Versicolor,4,1
+EM,5,,Virginica,0,2
+EM,5,,Virginica,1,0
+EM,5,,Virginica,2,0
+EM,5,,Virginica,3,14
+EM,5,,Virginica,4,34
