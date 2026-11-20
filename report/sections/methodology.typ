@@ -18,7 +18,7 @@
 
   Na avaliação experimental, foram testados valores de $k$ entre 2 e 5, cada um executado 10 vezes com sementes aleatórias distintas, usando o parâmetro $"n_init" = 1$ para permitir a análise do impacto da inicialização.
 
-  Para cada execução, foram registrados o Silhouette Score, o ARI e o valor final da função objetivo. Para cada valor de $k$, foi selecionada a execução de menor função objetivo, e a configuração final foi escolhida pela maior silhueta entre estes. Assim, o modelo foi ajustado novamente com seus respectivos parâmetros e semente para gerar as visualizações do agrupamento, dos graus de pertinência e da convergência da função objetivo.
+  Para cada execução, foram registrados o Silhouette Score, o ARI e o valor final da função objetivo. Para cada valor de $k$, foi selecionada a execução de menor função objetivo, e a configuração final foi escolhida pela maior silhueta entre estes. Assim, o modelo foi ajustado novamente com seus respectivos parâmetros e semente para gerar as visualizações necessárias.
 
   == K-Medoids
 
@@ -30,14 +30,14 @@
 
   == Fuzzy K-Means
 
-  O Fuzzy K-Means é uma generalização do K-Means em que cada observação pertence a cada agrupamento $j$ segundo um grau de pertinência $u_(i j) in [0, 1]$, a soma dos quais é 1. Os protótipos continuam sendo centróides, mas calculados como médias ponderadas pelas pertinências. A função objetivo minimizada é:
+  O Fuzzy K-Means é uma generalização do K-Means em que cada observação pertence a cada agrupamento $j$ segundo um grau de pertinência $u_(i j) in [0, 1]$, a soma dos quais é 1. Os protótipos continuam sendo centróides, mas calculados como médias ponderadas pelas pertinências elevadas ao expoente de fuzzificação $m$, isto é, $u_(i j)^m$. A função objetivo minimizada é:
 
   $ J_"m" = sum_(i=1)^n sum_(j=1)^k u_(i j)^"m" ||x_i - c_j||^2, $
 
 
   Neste trabalho, o algoritmo foi implementado com a classe FCM @bezdek1981pattern @fcmeans, utilizando a inicialização padrão da classe e as demais configurações seguindo as predefinições. Para calcular o Silhouette Score e o ARI, cada observação foi associada ao agrupamento de maior pertinência, obtendo-se um particionamento _crisp_.
 
-  Na avaliação experimental, foram testados valores de $k$ entre 2 e 5 e $"m" in {1.5, 2.0, 2.5}$, cada combinação executada 10 vezes com sementes aleatórias distintas. Totalizando 120 execuções. O parâmetro $m$ controla o grau de fuzzificação, de forma que valores maiores distribuem mais as pertinências entre os grupos.
+  Na avaliação experimental, foram testados valores de $k$ entre 2 e 5 e $"m" in {1.5, 2.0, 2.5}$, cada combinação executada 10 vezes com sementes aleatórias distintas, somando 120 execuções. O parâmetro $m$ controla o grau de fuzzificação, de forma que valores maiores distribuem mais as pertinências entre os grupos.
 
   Para cada execução, foram registrados o Silhouette Score, o ARI e o valor final da função objetivo `J_m`. Entre execuções com o mesmo k e m, foi escolhida a melhor segundo a função objetivo. Como `J_m` não é comparável entre valores distintos de `m`, pois $u_(i j)^m$ muda a escala do objetivo, a configuração final `(k, m)` foi escolhido pela maior silhueta _interna_, calculada sobre a partição _crisp_. Assim, o procedimento é uma única busca sobre os doze pares `(k, m)`, em que para cada `k`, a curva `"Sil"(k)` mostra o melhor `m`, e o par final é o de maior silhueta, definindo `k^*`. A comparação com os demais algoritmos é feita pela tendência das curvas e pelo ARI, que foi calculado somente como avaliação posterior e não participou da seleção.
 

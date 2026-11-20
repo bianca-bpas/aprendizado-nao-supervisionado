@@ -30,8 +30,7 @@
     caption: [Silhouette em função do número de clusters $k$ (K-Means).],
   ) <fig:kmeans-sil>
 
-  //TODO Adicionar um scatter plot comparando k2 e k3.
-  A partição com $k^* = 2$ isola as 50 _setosa_ em um grupo e reúne as 100 observações de _versicolor_ e _virginica_ no outro. A silhueta reflete a separação da _setosa_, mas o ARI decorre da fusão entre _versicolor_ e _virginica_. A silhueta decresce de $k = 2$ até $k = 5$, enquanto o ARI é máximo em $k = 3$ (0,620), com silhueta de 0,459. A divergência entre os critérios é similar à observada no K-Medoids, em que a silhueta favorece 2 grupos, mas o ARI 3. Nessa partição de $k = 3$, a _setosa_ permanece isolada, mas  25 das 100 observações das outras espécies não pertencem ao respectivo grupo majoritário. Com $k = 4$ e $k = 5$, a _setosa_ passa a ser subdividida (27/23), acompanhada do decrescimento de ambas as métricas.
+  A partição com $k^* = 2$ isola as 50 _setosa_ em um grupo e reúne as 100 observações de _versicolor_ e _virginica_ no outro. A silhueta reflete a separação da _setosa_, mas o ARI decorre da fusão entre _versicolor_ e _virginica_. A silhueta decresce de $k = 2$ até $k = 5$, enquanto o ARI é máximo em $k = 3$ (0,620), com silhueta de 0,459. A divergência entre os critérios é similar à observada no K-Medoids, em que a silhueta favorece 2 grupos, mas o ARI 3. Nessa partição de $k = 3$, a _setosa_ permanece isolada, mas 25 das 100 observações das outras espécies não pertencem ao respectivo grupo majoritário. Com $k = 4$ e $k = 5$, a _setosa_ passa a ser subdividida (27/23), acompanhada do decrescimento de ambas as métricas.
 
   == K-Medoids
 
@@ -202,20 +201,18 @@
       [5], [`tied`], [0,300], [0,727], [326,7], [823,8],
       table.hline(),
     ),
-    caption: [Misturas gaussianas com EM: por $k$, tipo de covariância de menor BIC, $-$log-verossimilhança mínima entre sementes para o tipo selecionado, ARI],
+    caption: [Misturas gaussianas com EM: por $k$, tipo de covariância de menor BIC, $-$log-verossimilhança mínima, ARI],
     kind: table,
   ) <tab:em>
 
-  O efeito da covariância cresce com $k$: em $k = 2$ todas as formas recuperaram a mesma partição, diferindo apenas na complexidade e no BIC, e em $k = 3$ as formas flexíveis capturaram melhor a fronteira _versicolor_/_virginica_ (ARI 0,904 com `full`/`tied`), enquanto a forma `spherical` apresentou perda considerável no ARI. O BIC escolheu `full` para $k = 2$ e $k = 3$ e `tied` para $k = 4$ e $k = 5$.
-
-  A silhueta das configurações selecionadas decresce de 0,580 em $k = 2$ para 0,300 em $k = 5$ (@fig:em-sil), um pouco mais rapidamente que em outros métodos, de modo que $k^* = 2$, com silhueta 0,580 e ARI 0,568. A partição crisp deste $k$ isola as 50 _setosa_ em um agrupamento, e as 100 observações de _versicolor_ e _virginica_ no outro, idêntica à do K-Means padronizado.
+  A silhueta das configurações selecionadas decresce de 0,580 em $k = 2$ para 0,300 em $k = 5$ (@fig:em-sil), de modo que $k^* = 2$, como nos demais métodos. Nesse valor, a partição _crisp_ isola as 50 _setosa_ em um grupo e reúne as 100 observações de _versicolor_ e _virginica_ no outro, que é a mesma partição obtida pelo K-Means padronizado. Em $k = 2$, todas as execuções produzem essa mesma partição, diferindo apenas no número de parâmetros e, portanto, no BIC.
 
   #figure(
     image("../imagens/em_silhouette.png", width: 100%),
     caption: [Silhouette em função do número de clusters $k$ (misturas gaussianas com EM).],
   ) <fig:em-sil>
 
-  A @tab:em-bic detalha a escolha do tipo de covariância por BIC. As diferenças para o segundo colocado são 112,7, 51,1, 8,8 e 19,6 para $k = 2, 3, 4, 5$, respectivamente; todas excedem 6, valor frequentemente usado como referência para evidência forte @kass1995bayes. O menor BIC global também ocorre em $k = 2$ (797,7), em acordo com a escolha por silhueta.
+  O tipo de covariância, escolhido por BIC, não foi decidido por diferença marginal. A @tab:em-bic mostra o grid completo: em $k = 3$, `full` fica com 804,5, contra 855,7 de `tied`, 968,2 de `diag` e 1231,7 de `spherical`; a folga sobre o segundo colocado é 51,1. Em $k = 2$, 4 e 5 as folgas são 112,7, 8,8 e 19,6 — todas acima de 6, limiar usual de evidência forte @kass1995bayes. O menor BIC global ocorre em $k = 2$ (797,7), apontando na mesma direção da silhueta; `em_bic_decomposition.csv` registra como penalidade e verossimilhança se combinam em cada valor.
 
   #figure(
     table(
@@ -223,7 +220,7 @@
       align: center,
       stroke: none,
       table.hline(),
-      table.header([*$k$*], [*Spherical*], [*Diag*], [*Tied*], [*Full*], [*Dif. p/ 2º*]),
+      table.header([*$k$*], [*Spherical*], [*Diag*], [*Tied*], [*Full*], [*Folga p/ 2º*]),
       table.hline(),
       [2], [1334,7], [1081,7], [910,4], [*797,7*], [112,7],
       [3], [1231,7], [968,2], [855,7], [*804,5*], [51,1],
@@ -231,13 +228,13 @@
       [5], [1111,4], [925,0], [*823,8*], [843,4], [19,6],
       table.hline(),
     ),
-    caption: [Misturas gaussianas: BIC por tipo de covariância e número de componentes. Em negrito, o menor BIC para cada $k$.],
+    caption: [EM: BIC por tipo de covariância e número de componentes. Em negrito, a menor estratégia de cada $k$; a última coluna é a diferença para a segunda melhor.],
     kind: table,
   ) <tab:em-bic>
 
-  O ganho principal da mistura gaussiana aparece em $k = 3$: o ARI chega a 0,904, o maior do estudo, embora a silhueta (0,373) seja inferior à de $k^* = 2$. Esse resultado é uma avaliação externa, não o critério usado para escolher $k$.
+  Como diagnóstico externo, vale registrar que o ARI em $k = 3$ sobe para 0,904, contra 0,568 em $k^* = 2$; a silhueta desse modelo cai para 0,373, e é por isso que ele não foi escolhido.
 
-  As cinco observações que não pertencem ao grupo majoritário de sua espécie são _versicolor_ atribuídas ao grupo majoritariamente _virginica_ (@tab:em-k3-cont). A projeção da @fig:em-clusters-k3 mostra essa partição no plano das pétalas. As probabilidades posteriores (@fig:em-post) indicam entropia média de 0,032; a menor probabilidade máxima é 0,635, e nenhuma observação fica abaixo de 0,6. A incerteza é, portanto, localizada nos pontos de fronteira.
+  As cinco observações que saem do grupo majoritário em $k = 3$ são _versicolor_ alocadas junto às _virginica_. A @tab:em-k3-cont e `em_k3_contingency.csv` trazem as contagens, e a @fig:em-clusters-k3 mostra a partição no plano das pétalas. O mapa de posteriores (@fig:em-post) reforça a leitura: a entropia média é 0,032, a probabilidade máxima mínima é 0,635 e nenhuma observação fica abaixo de 0,6. A incerteza existe, mas é localizada nos pontos de fronteira.
 
   #figure(
     table(
@@ -252,19 +249,20 @@
       [Virginica], [0], [0], [50],
       table.hline(),
     ),
-    caption: [EM com $k = 3$: contingência entre a espécie real e o grupo de maior probabilidade posterior.],
+    caption: [EM em $k = 3$: contingência entre espécies reais e o grupo de maior posterior. Os 5 erros são _versicolor_ no grupo majoritariamente _virginica_.],
     kind: table,
   ) <tab:em-k3-cont>
 
   #figure(
     image("../imagens/em_clusters_k3.png", width: 90%),
-    caption: [EM com $k = 3$ no plano `petal_length` × `petal_width`.],
+    caption: [EM em $k = 3$ no plano `petal_length` × `petal_width`; a legenda informa a composição de cada grupo.],
   ) <fig:em-clusters-k3>
 
   #figure(
     image("../imagens/em_posteriors.png", width: 100%),
-    caption: [EM com $k = 3$: probabilidades posteriores por espécie e confiança das atribuições.],
+    caption: [EM em $k = 3$: posteriores ordenados por espécie e confiança da atribuição no plano das pétalas; em vermelho, as observações fora do grupo majoritário.],
   ) <fig:em-post>
+
 
   == Agrupamento hierárquico Centroid Linkage
 
@@ -587,7 +585,7 @@
     kind: table,
   ) <tab:tsne>
 
-  Pela versão atual, a perplexidade é selecionada pela maior trustworthiness, usando a silhueta interna apenas como desempate. Assim, a perplexidade selecionada é 20, com trustworthiness 0,990, silhueta não supervisionada 0,819 e silhueta externa 0,508. Pela seleção anterior pela silhueta, perplexidade 30 tinha silhueta 0,865 e trustworthiness 0,989. A silhueta externa pelas espécies reais e a divergência KL são apresentadas como medidas complementares.
+  A perplexidade é selecionada pela maior trustworthiness, usando a silhueta interna apenas como desempate. Assim, a perplexidade selecionada é 20, com trustworthiness 0,990, silhueta não supervisionada 0,819 e silhueta externa 0,508. Para referência, a perplexidade 30, que maximiza a silhueta interna, atinge 0,865, com trustworthiness de 0,989. A silhueta externa pelas espécies reais e a divergência KL são apresentadas como medidas complementares.
 
   Na análise das sementes de 0 a 9 na perplexidade selecionada, 20, a silhueta não supervisionada média foi 0,819 e a trustworthiness média foi 0,990, ambas sem variação observável. A silhueta externa média foi 0,508. Como a inicialização foi fixada em PCA, esse desvio zero não constitui evidência de estabilidade robusta sob inicializações aleatórias ou em novas amostras.
 
