@@ -16,7 +16,7 @@
 
   Neste trabalho, o algoritmo foi implementado com a classe _KMeans_ do Scikit-learn @pedregosa2011scikit, utilizando a SSE e inicialização padrão da biblioteca, com as demais configurações seguindo as predefinições da classe.
 
-  Na avaliação experimental, foram testados valores de $k$ entre 2 e 5, cada um executado 10 vezes com sementes aleatórias distintas, usando o parâmetro $"n_init" = 1$ para permitir a análise do impacto da inicialização.
+  Na avaliação experimental, foram testados valores de $k$ entre 2 e 5, cada um executado 10 vezes com sementes aleatórias distintas, usando o parâmetro $"n_init" = 1$ para permitir a análise do impacto da inicialização.#footnote[A inicialização padrão é `k-means++` e assim foi mantida, mas um estudo mostrou que as melhores soluções por $k$, segundo os critérios, coincidem.]
 
   Para cada execução, foram registrados o Silhouette Score, o ARI e o valor final da função objetivo. Para cada valor de $k$, foi selecionada a execução de menor função objetivo, e a configuração final foi escolhida pela maior silhueta entre estes. Assim, o modelo foi ajustado novamente com seus respectivos parâmetros e semente para gerar as visualizações necessárias.
 
